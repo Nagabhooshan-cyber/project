@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Planner</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        .container {
+            max-width: 500px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #333;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        button {
+            background: #6a11cb;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover {
+            background: #2575fc;
+        }
+        .task-list, .subject-list {
+            margin-top: 20px;
+            text-align: left;
+        }
+        .task-item, .subject-item {
+            background: #f4f4f4;
+            padding: 10px;
+            margin: 10px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .urgent {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>📚 Study Planner</h2>
+        <input type="text" id="subject" placeholder="Enter Subject">
+        <input type="text" id="task" placeholder="Enter Task">
+        <select id="priority">
+            <option value="normal">Normal</option>
+            <option value="urgent">Urgent</option>
+        </select>
+        <button onclick="addTask()">Add Task</button>
+        
+        <div class="task-list" id="taskList"></div>
+    </div>
+    
+    <div class="container">
+        <h3>📖 Added Subjects</h3>
+        <div class="subject-list" id="subjectList"></div>
+    </div>
+
+    <script>
+        let addedSubjects = new Set();
+
+        function addTask() {
+            let subject = document.getElementById('subject').value;
+            let task = document.getElementById('task').value;
+            let priority = document.getElementById('priority').value;
+
+            if (subject === '' || task === '') {
+                alert("Please fill all fields");
+                return;
+            }
+
+            let taskList = document.getElementById('taskList');
+            let taskItem = document.createElement('div');
+            taskItem.classList.add('task-item');
+
+            if (priority === 'urgent') {
+                taskItem.innerHTML = `<span class='urgent'>${subject}: ${task} (Urgent)</span> <button onclick='removeTask(this)'>✅ Done</button>`;
+            } else {
+                taskItem.innerHTML = `<span>${subject}: ${task}</span> <button onclick='removeTask(this)'>✅ Done</button>`;
+            }
+            
+            taskList.appendChild(taskItem);
+            addedSubjects.add(subject);
+            updateSubjectList();
+            
+            document.getElementById('subject').value = '';
+            document.getElementById('task').value = '';
+        }
+        
+        function removeTask(button) {
+            button.parentElement.remove();
+        }
+
+        function updateSubjectList() {
+            let subjectListDiv = document.getElementById('subjectList');
+            subjectListDiv.innerHTML = '';
+            addedSubjects.forEach(subject => {
+                let subjectItem = document.createElement('div');
+                subjectItem.classList.add('subject-item');
+                subjectItem.textContent = subject;
+                subjectListDiv.appendChild(subjectItem);
+            });
+        }
+    </script>
+</body>
+</html>
